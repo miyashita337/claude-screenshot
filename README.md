@@ -13,11 +13,9 @@ A comprehensive macOS screenshot automation system that integrates with Claude C
 
 ## Quick Start
 
-1. **Download and Run Setup**:
+1. **One-Command Install**:
    ```bash
-   curl -O https://gist.githubusercontent.com/USER/GIST_ID/raw/master_setup.sh
-   chmod +x master_setup.sh
-   ./master_setup.sh
+   curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.sh | bash
    ```
 
 2. **Take Screenshots**:
@@ -26,37 +24,56 @@ A comprehensive macOS screenshot automation system that integrates with Claude C
 
 3. **Use with Claude Code**:
    - Use `/ss` command to show latest screenshot to Claude
+   - Restart Claude Code to load new commands
 
 ## Installation
 
-### Method 1: Master Setup (Recommended)
+### Method 1: One-Command Install (Recommended)
 
 ```bash
-# Download and run the master setup script
-./master_setup.sh
+curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.sh | bash
 ```
 
-### Method 2: Manual Setup
+This will automatically:
+- Install required dependencies (fswatch via Homebrew)
+- Configure macOS screenshot settings
+- Set up all scripts and Claude Code commands
+- Create shell aliases
 
-1. **Download Scripts**:
+### Method 2: Manual Installation
+
+1. **Clone Repository**:
    ```bash
-   mkdir -p ~/Pictures/Screenshots
-   cd ~/Pictures/Screenshots
-   # Download all .sh files from the gist
+   git clone https://github.com/miyashita337/claude-screenshot.git
+   cd claude-screenshot
    ```
 
-2. **Make Scripts Executable**:
+2. **Run Installer**:
    ```bash
-   chmod +x *.sh ss
+   ./install.sh
    ```
 
-3. **Install Dependencies**:
+### Method 3: Development Setup
+
+1. **Clone for Development**:
    ```bash
+   git clone https://github.com/miyashita337/claude-screenshot.git
+   cd claude-screenshot
+   ```
+
+2. **Manual Setup**:
+   ```bash
+   # Copy scripts
+   cp scripts/* ~/Pictures/Screenshots/
+   cp claude-commands/* ~/.claude/commands/
+   
+   # Make executable
+   chmod +x ~/Pictures/Screenshots/*.sh
+   
+   # Install dependencies
    brew install fswatch
-   ```
-
-4. **Configure macOS**:
-   ```bash
+   
+   # Configure macOS
    defaults write com.apple.screencapture location ~/Pictures/Screenshots
    killall SystemUIServer
    ```
@@ -345,12 +362,26 @@ This system was designed as a comprehensive solution for screenshot automation. 
 - Submit pull requests
 - Share your workflow optimizations
 
+## Repository
+
+- **GitHub**: https://github.com/miyashita337/claude-screenshot
+- **Issues**: https://github.com/miyashita337/claude-screenshot/issues
+- **License**: CC0 1.0 Universal (Public Domain)
+
 ## Credits
 
 - Original inspiration: [Gist by miyashita337](https://gist.github.com/miyashita337/9cf694f01ee19c3c16e6d34afab64e8e)
 - Developed by: Claude AI Assistant
 - Date: 2025-07-09
 
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly on macOS
+5. Submit a pull request
+
 ---
 
-*For questions or support, please refer to the troubleshooting section or check the log files for detailed error information.*
+*For questions or support, please [open an issue](https://github.com/miyashita337/claude-screenshot/issues) or refer to the troubleshooting section.*

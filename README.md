@@ -13,34 +13,89 @@ A comprehensive macOS screenshot automation system that integrates with Claude C
 
 ## Quick Start
 
-1. **One-Command Install**:
-   ```bash
-   curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.sh | bash
-   ```
+### 🔒 Secure Installation (Recommended)
 
-2. **Take Screenshots**:
-   - `Command+Shift+4` - Save to file
-   - `Command+Shift+Control+4` - Copy to clipboard
+**macOS/Linux:**
+```bash
+# Secure two-step installation
+curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/safe-install.sh | bash
+```
 
-3. **Use with Claude Code**:
-   - Use `/ss` command to show latest screenshot to Claude
-   - Restart Claude Code to load new commands
+**Windows:**
+```powershell
+# Download and run PowerShell installer
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.ps1" -OutFile "install.ps1"
+.\install.ps1
+```
 
-## Installation
+### ⚡ Direct Installation (Advanced Users)
 
-### Method 1: One-Command Install (Recommended)
-
+**macOS/Linux:**
 ```bash
 curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.sh | bash
 ```
 
-This will automatically:
-- Install required dependencies (fswatch via Homebrew)
-- Configure macOS screenshot settings
-- Set up all scripts and Claude Code commands
-- Create shell aliases
+**Windows:**
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.ps1" -OutFile "install.ps1"; .\install.ps1 -Force
+```
 
-### Method 2: Manual Installation
+### 📸 Usage
+
+**macOS:**
+- `Command+Shift+4` - Save to file
+- `Command+Shift+Control+4` - Copy to clipboard
+
+**Windows:**
+- `Win+Shift+S` - Snipping Tool
+- Save screenshots to `%USERPROFILE%\Pictures\Screenshots`
+
+**Claude Code Integration:**
+- Use `/ss` command to show latest screenshot to Claude
+- Restart Claude Code to load new commands
+
+## Installation Methods
+
+### 🔒 Method 1: Secure Installation (Recommended)
+
+**For macOS/Linux users who want maximum security:**
+
+```bash
+# Step 1: Download secure installer
+curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/safe-install.sh | bash
+
+# The secure installer will:
+# 1. Download the main installer
+# 2. Verify SHA256 integrity 
+# 3. Show preview of installer content
+# 4. Ask for confirmation before execution
+```
+
+**For Windows users:**
+```powershell
+# Download installer for review
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.ps1" -OutFile "install.ps1"
+
+# Review the script (optional but recommended)
+Get-Content install.ps1 | Select-Object -First 50
+
+# Run installer
+.\install.ps1
+```
+
+### ⚡ Method 2: Direct Installation
+
+**macOS/Linux:**
+```bash
+curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.sh | bash
+```
+
+**Windows:**
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.ps1" -OutFile "install.ps1"; .\install.ps1 -Force
+```
+
+### 🛠️ Method 3: Manual/Development Setup
 
 1. **Clone Repository**:
    ```bash
@@ -48,35 +103,32 @@ This will automatically:
    cd claude-screenshot
    ```
 
-2. **Run Installer**:
+2. **Run Platform-Specific Installer**:
    ```bash
+   # macOS/Linux
    ./install.sh
+   
+   # Windows (PowerShell)
+   .\install.ps1
    ```
 
-### Method 3: Development Setup
+### 📋 What Gets Installed
 
-1. **Clone for Development**:
-   ```bash
-   git clone https://github.com/miyashita337/claude-screenshot.git
-   cd claude-screenshot
-   ```
+**All Platforms:**
+- Screenshot management scripts
+- Claude Code custom commands (`/ss`, `/sslist`, `/ssshow`)
+- Configuration files and aliases
 
-2. **Manual Setup**:
-   ```bash
-   # Copy scripts
-   cp scripts/* ~/Pictures/Screenshots/
-   cp claude-commands/* ~/.claude/commands/
-   
-   # Make executable
-   chmod +x ~/Pictures/Screenshots/*.sh
-   
-   # Install dependencies
-   brew install fswatch
-   
-   # Configure macOS
-   defaults write com.apple.screencapture location ~/Pictures/Screenshots
-   killall SystemUIServer
-   ```
+**macOS/Linux Specific:**
+- Homebrew dependencies (fswatch)
+- macOS screenshot location configuration
+- Shell aliases in `.bashrc`/`.zshrc`
+
+**Windows Specific:**
+- PowerShell-based screenshot monitoring
+- Windows file system watcher
+- PowerShell profile configuration
+- Desktop shortcut to screenshots folder
 
 ## Components
 

@@ -41,11 +41,20 @@ log_error() {
 check_prerequisites() {
     log_info "Checking prerequisites..."
     
-    # Check if we're on macOS
-    if [[ "$OSTYPE" != "darwin"* ]]; then
-        log_error "This system is designed for macOS only"
-        exit 1
-    fi
+    # Check if we're on a supported platform
+    case "$OSTYPE" in
+        darwin*)
+            log_success "Platform: macOS detected"
+            ;;
+        linux*)
+            log_success "Platform: Linux detected"
+            ;;
+        *)
+            log_error "This system supports macOS and Linux only"
+            echo "For Windows, please use: install.ps1"
+            exit 1
+            ;;
+    esac
     
     # Check if Homebrew is installed
     if ! command -v brew >/dev/null 2>&1; then
@@ -214,10 +223,37 @@ Next Steps:
 EOF
 }
 
-# Main execution
-main() {
+# User confirmation
+confirm_installation() {
     echo -e "${BLUE}=== Claude Screenshot System Installer ===${NC}"
     echo
+    echo "This installer will:"
+    echo "• Install screenshot management scripts to ~/Pictures/Screenshots"
+    echo "• Install Claude Code custom commands to ~/.claude/commands"
+    echo "• Configure macOS screenshot settings"
+    echo "• Set up shell aliases in your shell configuration"
+    echo "• Install dependencies via Homebrew (if needed)"
+    echo
+    echo -e "${YELLOW}⚠️  Security Notice:${NC}"
+    echo "This installer will modify your system configuration and install software."
+    echo "Please review the source code before proceeding:"
+    echo "https://github.com/miyashita337/claude-screenshot"
+    echo
+    
+    read -p "Do you want to proceed with the installation? [y/N]: " -n 1 -r
+    echo
+    
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Installation cancelled by user"
+        exit 0
+    fi
+    
+    log_info "Starting installation..."
+}
+
+# Main execution
+main() {
+    confirm_installation
     
     check_prerequisites
     install_scripts

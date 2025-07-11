@@ -176,19 +176,19 @@ function Install-WindowsScripts {
 # PowerShell equivalent of the macOS screenshot manager
 
 param(
-    [string]`$Action = "help"
+    [string]$Action = "help"
 )
 
-`$ScreenshotDir = "`$env:USERPROFILE\Pictures\Screenshots"
-`$VaultDir = "`$env:USERPROFILE\my-vault\test"
-`$ReferenceFile = "`$VaultDir\Screenshots.md"
+$ScreenshotDir = "$env:USERPROFILE\Pictures\Screenshots"
+$VaultDir = "$env:USERPROFILE\my-vault\test"
+$ReferenceFile = "$VaultDir\Screenshots.md"
 
 function Add-ScreenshotReference {
-    param([string]`$ScreenshotPath)
+    param([string]$ScreenshotPath)
     
-    if (!(Test-Path `$ReferenceFile)) {
-        New-Item -ItemType File -Path `$ReferenceFile -Force | Out-Null
-        Set-Content -Path `$ReferenceFile -Value @"
+    if (!(Test-Path $ReferenceFile)) {
+        New-Item -ItemType File -Path $ReferenceFile -Force | Out-Null
+        Set-Content -Path $ReferenceFile -Value @"
 # Screenshots
 
 Automatically generated screenshot references.
@@ -196,73 +196,73 @@ Automatically generated screenshot references.
 "@
     }
     
-    `$timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    `$filename = Split-Path `$ScreenshotPath -Leaf
-    `$size = [math]::Round((Get-Item `$ScreenshotPath).Length / 1KB, 2)
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $filename = Split-Path $ScreenshotPath -Leaf
+    $size = [math]::Round((Get-Item $ScreenshotPath).Length / 1KB, 2)
     
-    `$content = @"
+    $content = @"
 
-## Screenshot - `$timestamp
+## Screenshot - $timestamp
 
-![Screenshot](`$ScreenshotPath)
+![Screenshot]($ScreenshotPath)
 
-**File:** ```$filename``
-**Path:** ```$ScreenshotPath``
-**Size:** `${size}KB
+**File:** $filename
+**Path:** $ScreenshotPath
+**Size:** ${size}KB
 
 ---
 
 "@
     
-    Add-Content -Path `$ReferenceFile -Value `$content
-    Write-Host "Added reference for: `$filename"
+    Add-Content -Path $ReferenceFile -Value $content
+    Write-Host "Added reference for: $filename"
 }
 
 function Start-ScreenshotMonitoring {
-    Write-Host "Monitoring screenshots in `$ScreenshotDir"
+    Write-Host "Monitoring screenshots in $ScreenshotDir"
     Write-Host "Press Ctrl+C to stop monitoring"
     
-    `$watcher = New-Object System.IO.FileSystemWatcher
-    `$watcher.Path = `$ScreenshotDir
-    `$watcher.Filter = "*.png"
-    `$watcher.EnableRaisingEvents = `$true
+    $watcher = New-Object System.IO.FileSystemWatcher
+    $watcher.Path = $ScreenshotDir
+    $watcher.Filter = "*.png"
+    $watcher.EnableRaisingEvents = $true
     
-    Register-ObjectEvent -InputObject `$watcher -EventName Created -Action {
+    Register-ObjectEvent -InputObject $watcher -EventName Created -Action {
         Start-Sleep -Seconds 1  # Wait for file to be fully written
-        Add-ScreenshotReference `$Event.SourceEventArgs.FullPath
+        Add-ScreenshotReference $Event.SourceEventArgs.FullPath
     } | Out-Null
     
     try {
-        while (`$true) {
+        while ($true) {
             Start-Sleep -Seconds 1
         }
     } finally {
-        `$watcher.EnableRaisingEvents = `$false
-        `$watcher.Dispose()
+        $watcher.EnableRaisingEvents = $false
+        $watcher.Dispose()
     }
 }
 
 function Show-RecentScreenshots {
-    `$screenshots = Get-ChildItem -Path `$ScreenshotDir -Filter "*.png" | Sort-Object LastWriteTime -Descending | Select-Object -First 10
+    $screenshots = Get-ChildItem -Path $ScreenshotDir -Filter "*.png" | Sort-Object LastWriteTime -Descending | Select-Object -First 10
     
-    if (`$screenshots.Count -eq 0) {
-        Write-Host "No screenshots found in `$ScreenshotDir"
+    if ($screenshots.Count -eq 0) {
+        Write-Host "No screenshots found in $ScreenshotDir"
         return
     }
     
     Write-Host "Recent screenshots:"
-    for (`$i = 0; `$i -lt `$screenshots.Count; `$i++) {
-        `$file = `$screenshots[`$i]
-        `$size = [math]::Round(`$file.Length / 1KB, 2)
-        Write-Host "`$(`$i + 1). `$(`$file.Name) (`$(`$file.LastWriteTime), `${size}KB)"
+    for ($i = 0; $i -lt $screenshots.Count; $i++) {
+        $file = $screenshots[$i]
+        $size = [math]::Round($file.Length / 1KB, 2)
+        Write-Host "$($i + 1). $($file.Name) ($($file.LastWriteTime), ${size}KB)"
     }
 }
 
-switch (`$Action.ToLower()) {
+switch ($Action.ToLower()) {
     "monitor" { Start-ScreenshotMonitoring }
     "process" { 
-        Get-ChildItem -Path `$ScreenshotDir -Filter "*.png" | ForEach-Object {
-            Add-ScreenshotReference `$_.FullName
+        Get-ChildItem -Path $ScreenshotDir -Filter "*.png" | ForEach-Object {
+            Add-ScreenshotReference $_.FullName
         }
     }
     "list" { Show-RecentScreenshots }
@@ -284,7 +284,7 @@ Examples:
 "@
     }
     default {
-        Write-Host "Unknown action: `$Action"
+        Write-Host "Unknown action: $Action"
         Write-Host "Use 'help' for usage information"
     }
 }
@@ -311,7 +311,7 @@ function Install-ClaudeCommands {
             Write-LogSuccess "Downloaded: $command"
         }
         catch {
-            Write-LogWarning "Failed to download $command`: $($_.Exception.Message)"
+            Write-LogWarning "Failed to download $command: $($_.Exception.Message)"
         }
     }
 }
@@ -349,7 +349,7 @@ function screenshot-process { & "$Script:ScriptsDir\screenshot-manager.ps1" proc
 function screenshot-list { & "$Script:ScriptsDir\screenshot-manager.ps1" list }
 
 # Set screenshot directory as a convenient variable
-`$Global:ScreenshotDir = "$Script:InstallDir"
+$Global:ScreenshotDir = "$Script:InstallDir"
 
 Write-Host "Claude Screenshot System loaded" -ForegroundColor Green
 "@
@@ -432,7 +432,7 @@ Files:
 
 Next Steps:
   1. Restart Claude Code to load new /ss commands
-  2. Restart PowerShell or run: . `$PROFILE
+  2. Restart PowerShell or run: . $PROFILE
   3. Take a screenshot and save to $InstallDir
   4. Try: /ss in Claude Code
 

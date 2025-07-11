@@ -358,6 +358,78 @@ screenshot-process
    mkdir -p ~/my-vault/test
    ```
 
+## Uninstallation
+
+To completely remove the Claude Screenshot System:
+
+### Manual Uninstallation
+
+**macOS/Linux:**
+```bash
+# Remove Claude Code commands
+rm -f ~/.claude/commands/ss.md
+rm -f ~/.claude/commands/sslist.md
+rm -f ~/.claude/commands/ssshow.md
+
+# Remove shell aliases from profile
+# Edit ~/.zshrc or ~/.bash_profile and remove the lines:
+# alias screenshot-monitor='~/Pictures/Screenshots/screenshot-monitor.sh'
+# alias screenshot-process='~/Pictures/Screenshots/screenshot-process.sh'
+# alias screenshot-list='~/Pictures/Screenshots/screenshot-list.sh'
+# alias clipboard-save='~/Pictures/Screenshots/clipboard-save.sh'
+
+# Remove scripts (optional - keeps your screenshot files)
+rm -f ~/Pictures/Screenshots/screenshot-monitor.sh
+rm -f ~/Pictures/Screenshots/screenshot-process.sh  
+rm -f ~/Pictures/Screenshots/screenshot-list.sh
+rm -f ~/Pictures/Screenshots/clipboard-save.sh
+rm -f ~/Pictures/Screenshots/ss
+
+# Remove launch agents
+rm -f ~/Library/LaunchAgents/com.user.claude-screenshot.plist
+launchctl unload ~/Library/LaunchAgents/com.user.claude-screenshot.plist 2>/dev/null
+
+# Remove log files
+rm -f ~/Library/Logs/claude-screenshot-monitor.log
+rm -f ~/Library/Logs/claude-screenshot-monitor.error.log
+
+# Reset screenshot location (optional)
+defaults write com.apple.screencapture location ~/Desktop
+killall SystemUIServer
+```
+
+**Windows:**
+```powershell
+# Remove Claude Code commands
+Remove-Item -Path "$env:USERPROFILE\.claude\commands\ss.md" -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "$env:USERPROFILE\.claude\commands\sslist.md" -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "$env:USERPROFILE\.claude\commands\ssshow.md" -Force -ErrorAction SilentlyContinue
+
+# Remove PowerShell profile entries
+# Edit $PROFILE and remove the Claude Screenshot System section
+
+# Remove scripts (optional - keeps your screenshot files)
+Remove-Item -Path "$env:USERPROFILE\Pictures\Screenshots\scripts\" -Recurse -Force -ErrorAction SilentlyContinue
+
+# Remove desktop shortcut
+Remove-Item -Path "$env:USERPROFILE\Desktop\Claude Screenshots.lnk" -Force -ErrorAction SilentlyContinue
+```
+
+### Note on Screenshot Files
+
+The uninstallation process does not delete your screenshot files by default. They remain in:
+- **macOS/Linux**: `~/Pictures/Screenshots/`
+- **Windows**: `%USERPROFILE%\Pictures\Screenshots\`
+
+If you want to remove all screenshot files as well, add:
+```bash
+# macOS/Linux (CAUTION: This deletes ALL screenshots)
+rm -rf ~/Pictures/Screenshots/
+
+# Windows (CAUTION: This deletes ALL screenshots)
+Remove-Item -Path "$env:USERPROFILE\Pictures\Screenshots\" -Recurse -Force
+```
+
 ## Log Files
 
 Monitor system activity:

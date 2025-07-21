@@ -2,7 +2,7 @@
 name: "ss"
 description: "Show the latest screenshot for analysis"
 author: "Claude AI Assistant"
-version: "1.0"
+version: "1.1.0"
 ---
 
 # Show Latest Screenshot
@@ -10,26 +10,51 @@ version: "1.0"
 This command automatically finds and displays the most recent screenshot from your Screenshots directory.
 
 ```bash
+# Find claude_integration.sh script dynamically
+CLAUDE_INTEGRATION_SCRIPT=""
+
+# Search common locations for the script
+for possible_location in \
+    "~/Pictures/Screenshots/claude_integration.sh" \
+    "/mnt/c/AItools/claude-screenshot/scripts/claude_integration.sh" \
+    "/mnt/c/Users/$USER/Pictures/Screenshots/claude_integration.sh" \
+    "$(pwd)/scripts/claude_integration.sh" \
+    "$(pwd)/../scripts/claude_integration.sh"; do
+    
+    if [ -f "$possible_location" ]; then
+        CLAUDE_INTEGRATION_SCRIPT="$possible_location"
+        break
+    fi
+done
+
+if [ -z "$CLAUDE_INTEGRATION_SCRIPT" ]; then
+    echo "❌ **Claude Screenshot Integration not found**"
+    echo ""
+    echo "Please run the installation script first:"
+    echo "- **Linux/macOS:** \`curl -sSL https://raw.githubusercontent.com/miyashita337/claude-screenshot/main/install.sh | bash\`"
+    echo "- **Windows:** Download and run \`install.ps1\`"
+    exit 1
+fi
+
 # Get the latest screenshot path
-SCREENSHOT_PATH=$(~/Pictures/Screenshots/claude_integration.sh latest 2>/dev/null | head -1)
+SCREENSHOT_PATH=$($CLAUDE_INTEGRATION_SCRIPT latest 2>/dev/null | head -1)
 
 if [ -n "$SCREENSHOT_PATH" ] && [ -f "$SCREENSHOT_PATH" ]; then
     echo "📸 **Latest Screenshot:**"
     echo
     echo "**File:** $(basename "$SCREENSHOT_PATH")"
     echo "**Path:** $SCREENSHOT_PATH"
-    echo "**Date:** $(date -r "$SCREENSHOT_PATH" '+%Y-%m-%d %H:%M:%S')"
-    echo "**Size:** $(du -h "$SCREENSHOT_PATH" | cut -f1)"
+    echo "**Date:** $(date -r "$SCREENSHOT_PATH" '+%Y-%m-%d %H:%M:%S' 2>/dev/null || echo "Unknown")"
+    echo "**Size:** $(du -h "$SCREENSHOT_PATH" 2>/dev/null | cut -f1 || echo "Unknown")"
     echo
     echo "![Latest Screenshot]($SCREENSHOT_PATH)"
 else
-    echo "❌ **No screenshots found**"
-    echo
-    echo "Take a screenshot first with:"
-    echo "- **Command+Shift+4** (save to file)"
-    echo "- **Command+Shift+Control+4** then run \`clipboard-save\`"
-    echo
-    echo "Screenshots are saved to: \`~/Pictures/Screenshots\`"
+    echo "❌ **No screenshots found or script execution failed**"
+    echo ""
+    echo "**Troubleshooting:**"
+    echo "1. **Take a screenshot:** Win+Shift+S (Windows) or Cmd+Shift+4 (macOS)"
+    echo "2. **Debug the integration:** Run \`DEBUG=1 $CLAUDE_INTEGRATION_SCRIPT latest\`"
+    echo "3. **Check script location:** $CLAUDE_INTEGRATION_SCRIPT"
 fi
 ```
 
@@ -44,6 +69,6 @@ fi
 4. ❓ Provides help if no screenshots are found
 
 **Requirements:**
-- Screenshot system must be set up (`~/Pictures/Screenshots/master_setup.sh`)
-- Screenshots directory: `~/Pictures/Screenshots`
-- Integration script: `~/Pictures/Screenshots/claude_integration.sh`
+- Claude Screenshot System must be installed (`./install.sh` or `./install.ps1`)
+- Screenshots directory automatically detected (WSL2/Windows compatible)
+- Integration script automatically located in common paths

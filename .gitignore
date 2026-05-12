@@ -28,3 +28,7 @@ Thumbs.db
 # Personal configurations
 config.local
 .env.local
+
+# Claude Code runtime artifacts
+.claude/.tool-failure-streak
+.claude/.tool-failure-streak.lock
